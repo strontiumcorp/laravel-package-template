@@ -1,0 +1,27 @@
+vendor/
+composer.lock
+.phpunit.cache/
+.phpunit.result.cache
+build/
+coverage/
+.idea/
+.vscode/
+
+# Python (scripts/*.py)
+__pycache__/
+*.py[cod]
+
+# Node
+node_modules/
+
+# OS and editor leftovers
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Local env and scratch files
+.env
+.env.*
+*.log
+release-notes.md

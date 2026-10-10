@@ -1,0 +1,61 @@
+{
+    "name": "strontiumcorp/laravel-package-template",
+    "description": "A Laravel package for Laravel 11, 12 and 13.",
+    "type": "library",
+    "license": "proprietary",
+    "keywords": ["laravel"],
+    "homepage": "https://github.com/strontiumcorp/laravel-package-template",
+    "authors": [
+        {
+            "name": "Mojahidul Islam",
+            "email": "itsemon245@gmail.com",
+            "homepage": "https://github.com/itsemon245",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/strontiumcorp/laravel-package-template/issues",
+        "source": "https://github.com/strontiumcorp/laravel-package-template"
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0|^5.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0|^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "StrontiumCorp\\PackageTemplate\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StrontiumCorp\\PackageTemplate\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest --parallel",
+        "test:coverage": "@php -d xdebug.mode=coverage vendor/bin/pest --parallel --passthru-php=\"'-d' 'xdebug.mode=coverage'\" --coverage --min=85",
+        "analyse": "vendor/bin/phpstan analyse --memory-limit=1G",
+        "format": "vendor/bin/pint",
+        "lint": "vendor/bin/pint --test",
+        "ci": ["@lint", "@analyse", "@test"]
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["StrontiumCorp\\PackageTemplate\\PackageTemplateServiceProvider"]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {"pestphp/pest-plugin": true}
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
