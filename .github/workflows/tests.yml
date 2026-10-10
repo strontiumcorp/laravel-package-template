@@ -1,0 +1,65 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # The combinations that matter: minimum PHP + lowest dependencies for each
+  # Laravel major, newest dependencies on a current PHP for each major (one
+  # also measures coverage), and the newest PHP. Kept small so pushes stay
+  # under the plan's 20 concurrent jobs and nothing waits for a runner. Every
+  # combination runs in full-matrix.yml. Swap in the PHP/Laravel pairs the
+  # consuming apps actually run.
+  tests:
+    uses: ./.github/workflows/test-suite.yml
+    with:
+      matrix: >-
+        {"include": [
+          {"php": "8.2", "laravel": "11", "stability": "prefer-lowest"},
+          {"php": "8.3", "laravel": "11", "stability": "prefer-stable"},
+          {"php": "8.2", "laravel": "12", "stability": "prefer-lowest"},
+          {"php": "8.4", "laravel": "12", "stability": "prefer-stable"},
+          {"php": "8.3", "laravel": "13", "stability": "prefer-lowest"},
+          {"php": "8.4", "laravel": "13", "stability": "prefer-stable", "coverage": true},
+          {"php": "8.5", "laravel": "13", "stability": "prefer-stable"}
+        ]}
+
+  # ui:start
+  # The published React stubs: tsc and Vitest.
+  ui:
+    uses: ./.github/workflows/ui-suite.yml
+
+  # ui:end
+  quality:
+    name: Static analysis & style
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      - name: Locate the Composer cache
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-quality-${{ hashFiles('composer.json') }}
+          restore-keys: composer-${{ runner.os }}-quality-
+      # PHPStan's result cache: only changed files are re-analysed. Keyed per
+      # commit, restored from the latest one.
+      - uses: actions/cache@v6
+        with:
+          path: build/phpstan
+          key: phpstan-${{ runner.os }}-${{ github.sha }}
+          restore-keys: phpstan-${{ runner.os }}-
+      - run: composer update --prefer-dist --no-interaction --no-progress
+      - run: vendor/bin/pint --test --parallel
+      - run: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
