@@ -2,8 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 // Tests for the published React components (stubs/inertia-react/components),
-// each on its own through props and callbacks. Pages that use Inertia are
-// tested with @inertiajs/react mocked.
+// each on its own through props and callbacks.
 export default defineConfig({
     resolve: {
         // How the pages import the components once published.

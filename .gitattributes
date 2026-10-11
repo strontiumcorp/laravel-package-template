@@ -9,7 +9,6 @@
 /scripts            export-ignore
 /build              export-ignore
 /CLAUDE.md          export-ignore
-/.codex             export-ignore
 /.claude            export-ignore
 # ui:start
 /package.json       export-ignore
