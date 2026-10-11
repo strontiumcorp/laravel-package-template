@@ -25,10 +25,16 @@ Describe what the package does, which apps install it and anything they need fro
 | `make format` | Pint fix. |
 | `make release ARGS="--dry-run"` | Preview the next release (see Git and releases). |
 | `make release-pr` / `make release-tag` | For a protected `main`: open the release as a pull request, then tag it once merged. |
+
 <!-- ui:start -->
+Frontend (optional; `make remove-ui` deletes it, for a package without React stubs):
+
+| Command | What it does |
+|---|---|
 | `make test-js` | `tsc` and Vitest for `stubs/inertia-react` (needs `npm ci`; `make install` does both). |
 | `make typecheck-stubs APPS="../app-one ../app-two"` | Type-checks `stubs/inertia-react` against each app's real React/Inertia. Run after any stub change. |
-| `make remove-ui` | Deletes the frontend tooling (for a package without React stubs). |
+| `make remove-ui` | Deletes the frontend tooling. |
+
 <!-- ui:end -->
 
 **Never run mutation tests** (`pest --mutate`) as part of the normal loop: they are slow here, and `--parallel` reports false kills.
